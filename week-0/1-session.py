@@ -1,6 +1,5 @@
 """
-Notes from Session 1 
-https://www.youtube.com/watch?v=5CLoUd2RptA
+Notes from Session 1. None of this is my own, following lessons from https://mcmedhacks.com/program-2023/
 """
 
 """
