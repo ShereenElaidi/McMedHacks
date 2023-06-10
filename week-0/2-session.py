@@ -162,4 +162,72 @@ for shape in test_json['shapes']:
 	ax.add_patch(poly)
 plt.show()
 
-# will deal with OOP later today
+# now, we will refactor this to use OOP 
+
+# we'll make a global variable that is a dictionary
+
+COLORMAP = {
+	'__ignore__' : 'none', 
+	'chair' : 'g', 
+	'person' : 'b', 
+	'sofa' : 'r'
+}
+
+# a class to store ImageData:
+
+class ImageData:
+
+	# initialization
+	def __init__(self, base_dir_path, file_id, image_ext='jpg'):
+
+		# obtain the directory of the current path 
+		self.base_dir = base_dir_path 
+
+		# id of the file 
+		self.file_id = file_id 
+
+		# extension of the file name "it's .jpg"
+		self.img_ext = image_ext
+
+		# absolute path to the image 
+		self.img_abs_path = os.path.join(base_dir_path, f'{file_id}.{img_ext}')
+
+		# absolute path to the labels (json file)
+		self.json_abs_path = os.path.join(base_dir_path, f'{file_id}.json')
+
+		self.img = None 
+		self.json = None 
+		self.labels = None 
+
+		# make sure that the absolute image path is correct 
+		try:
+			self.img = Image.open(self.img_abs_path)
+		except Exception as e:
+			print(f"Error reading image: {self.file_id}")
+
+		# make sure that the absolute json path is correct 
+		try:
+			self.json = self.load_json()
+		except Exception as e:
+			print(f'Error reading json: {self.file_id}')
+
+		# collect all the labels as a set; map applies the lambda 
+		# function to each one 
+
+		self.labels = set(map(
+			lambda f: f['label'], self.json['shapes']))
+
+	# methods for this class
+
+	def load_json(self):
+		# initialize the json object 
+		json_obj = None 
+
+		# open the file 
+		with open(self.json_abs_path, 'r') as f:
+			json_obj = json.load(f)
+		return json_obj
+
+	# get the labels 
+	def get_all_labels(self):
+		return self.labels
